@@ -13,45 +13,6 @@ export const getAll = async (req, res) => {
    }
 }
 
-// export const getOne = async (req, res) => {
-//    try {
-//       const postId = req.params.id;
-//       PostModel.findOneAndUpdate(
-//       {
-//          _id: postId,
-//       }, 
-//       {
-//          $inc: { viewsCount: 1},
-//       },
-//       {
-//          returnDocument: 'after',
-//       },
-//       (err, doc) => {
-//          if (err) {
-//             console.log(err);
-//             return res.status(500).json({
-//                 message: 'It is impossible to return a post!'
-//             });
-//          }
-
-//          if (!doc) {
-//             return res.status(404).json({
-//                message: 'This post is undefinded'
-//             });
-//          }
-
-//          res.json(doc);
-//       },
-//     );
-      
-
-//    } catch (error) {
-//       console.log(error);
-//       res.status(500).json({
-//           message: 'Do not have access to posts!'
-//       });
-//    }
-// }
 
 export const getOne = async (req, res) => {
 
@@ -67,7 +28,7 @@ export const getOne = async (req, res) => {
                   {
                      returnDocument: 'after',
                   }
-      )
+      ).populate('user')
      .then(
       (doc) => {
          if (!doc) {
@@ -119,7 +80,7 @@ PostModel.updateOne(
                title: req.body.title,
                text: req.body.text,
                imageUrl: req.body.imageUrl,
-               tags: req.body.tags,
+               tags: req.body.tags.split(','),
                user: req.userId,
             }
 )
@@ -145,7 +106,7 @@ export const create = async (req, res) => {
       title: req.body.title,
       text: req.body.text,
       imageUrl: req.body.imageUrl,
-      tags: req.body.tags,
+      tags: req.body.tags.split(','),
       user: req.userId,
     });
 
@@ -158,3 +119,18 @@ export const create = async (req, res) => {
       });
    } 
 }
+
+
+export const getLastTags =  async (req, res) => {
+   try {
+      const posts = await PostModel.find().limit(5).exec(); 
+      const tags = posts.map(obj => obj.tags).flat().slice(0, 5)
+      res.json(tags);
+   } catch (error) {
+      console.log(error);
+      res.status(500).json({
+          message: 'There is a problem with creating a post!'
+      });
+   }
+}
+
