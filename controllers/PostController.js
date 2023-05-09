@@ -13,6 +13,34 @@ export const getAll = async (req, res) => {
    }
 }
 
+export const getAllNew = async (req, res) => {
+   try {
+      const posts = await PostModel.find().sort("createdAt").populate('user').exec(); 
+      posts.reverse();
+
+      res.json(posts);
+   } catch (error) {
+      console.log(error);
+      res.status(500).json({
+          message: 'There is a problem with getting new posts!'
+      });
+   }
+}
+
+
+export const getAllPopular = async (req, res) => {
+   try {
+      const posts = await PostModel.find().sort({"viewsCount" : -1}).populate('user').exec(); 
+
+      res.json(posts);
+   } catch (error) {
+      console.log(error);
+      res.status(500).json({
+          message: 'There is a problem with getting popular posts!'
+      });
+   }
+}
+
 
 export const getOne = async (req, res) => {
 
@@ -133,4 +161,24 @@ export const getLastTags =  async (req, res) => {
       });
    }
 }
+
+
+export const getTagsByName =  async (req, res) => {
+   const tagName = req.params.name;
+   try {
+      const posts = await PostModel.find().exec(); 
+      //  const tags = posts.map(el => el.tags )
+      //  const tagsAll = [].concat(...tags);
+    
+      const postsWithTag = posts.filter(el => el.tags.includes(tagName) )
+     
+      res.json(postsWithTag);
+   } catch (error) {
+      console.log(error);
+      res.status(500).json({
+          message: 'There is a problem with getting tags!'
+      });
+   }
+}
+
 

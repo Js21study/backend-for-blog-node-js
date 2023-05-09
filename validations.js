@@ -18,3 +18,8 @@ export const postCreateValidation = [
     body('tags', 'There is problem with tags.').optional().isString(),
     body('imageUrl', 'Something is wrong with url').optional().isString(),
 ];
+
+
+export const commentsCreateValidation = [
+    body('text', 'Write your comment').isLength({ min: 2 }).isString(),
+];
