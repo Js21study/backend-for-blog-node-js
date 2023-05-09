@@ -9,8 +9,7 @@ import { UserController, PostController, CommentsController } from './controller
 import handleValidationErrors from './utils/handleValidationErrors.js';
 import checkAuth from './utils/checkAuth.js'
 
-mongoose.connect('mongodb+srv://admin:12345qwerty@cluster0.n9ckvre.mongodb.net/blog?retryWrites=true&w=majority'
-).then(() => console.log('db is launched')
+mongoose.connect(process.env.MONGODB_URI).then(() => console.log('db is launched')
 ).catch((err)=> console.log('db error', err))
 
 const app = express();
@@ -66,7 +65,7 @@ app.get('/comments', CommentsController.getAllComments );
 app.post('/comments/:idPost', checkAuth, commentsCreateValidation, handleValidationErrors, CommentsController.createComment );
 
 
-app.listen(4444, (err) => {
+app.listen(process.env.PORT || 4444, (err) => {
     if (err) {
         return console.log(err);
     }
