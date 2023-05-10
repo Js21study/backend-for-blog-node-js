@@ -30,9 +30,7 @@ const upload = multer({storage});
 
 app.use(express.json());
 
-app.use(cors({
-    'Access-Control-Allow-Origin': '*'
-}))
+app.use(cors())
 
 app.use('/uploads', express.static('uploads'));
 
