@@ -30,7 +30,9 @@ const upload = multer({storage});
 
 app.use(express.json());
 
-app.use(cors())
+app.use(cors({
+    origin: 'https://communication-blog.herokuapp.com'
+}))
 
 app.use('/uploads', express.static('uploads'));
 
